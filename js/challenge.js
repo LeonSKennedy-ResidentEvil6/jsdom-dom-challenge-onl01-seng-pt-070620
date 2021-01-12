@@ -1,10 +1,10 @@
 // As a user, I should see the timer increment every second once the page has loaded.
 
 const timer = setInterval(timerFunc, 1000);
-
+let count = 0;
 function timerFunc() {
-    let timerVal = Date.now();
-    document.getElementById("counter").innerHTML = timerVal;
+    count += 1;
+    document.getElementById("counter").innerText = count;
 }
 
 // As a user, I can manually increment and decrement the counter using the plus and minus buttons.
@@ -62,30 +62,41 @@ function likedNum() {
     // the pause button should then show the text "resume."
 // When 'resume' is clicked, it should restart the counter and re-enable the buttons.
 
-let pause = document.getElementById("pause");
+let pauseButton = document.getElementById("pause");
+let paused = false;
     // attach event listener
-pause.addEventListener("click", pauseCounter)
+pauseButton.addEventListener("click", pauseCounter)
     // tell what happens when user clicks on pause button
 function pauseCounter() {
-    let playing =!0
-    let interval = timer
-    if (playing) { playing =!1, clearInterval(interval), this.innerText = "resume" }
-    else { playing =! 0, interval = timer, this.innerText = "pause" };
+    paused = !paused
+    let btns = document.querySelectorAll(".disable-me");
+    let pauseButton = document.getElementById("pause");
+
+    if (paused) { btns.forEach(btn => (btn.disabled = true));
+        pauseButton.innerText = "resume";
+    } else { 
+        pauseButton.innerText = "pause"
+        btns.forEach(btn => (btn.disabled = false));
+    }
+    console.log(paused);
 }
 
 
 // As a user, I can leave comments on my gameplay, such as: "Wow, what a fun game this is."
 
-const comment = document.getElementsByTagName("form")
-    // add event listener
-comment.addEventListener("submit", function(event) {
-    event.preventDefault();
-    let b = this.children[0]
-    let c = b.value
-    b.value = ""
-    let d = querySelector(".comments")
-    let e = document.createElement("p")
-    e.innerText = c
-    d.appendChild(e)
-})
+    document.addEventListener("DOMContentLoaded", function() {
+        const commentForm = document.getElementById("comment-form");
+        // add event listener
+        commentForm.addEventListener("submit", commentHandler)
+    });   
+
+    function commentHandler(event) {
+        event.preventDefault();
+        let comment = document.getElementById("comment-input").value;
+        let commentList = document.querySelector(".comments")
+        let li = document.createElement("li")
+        li.innerText = comment;
+        commentList.appendChild(li);
+        event.target.reset()
+    }
 
